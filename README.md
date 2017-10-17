@@ -6,4 +6,5 @@ On the first commit the vehicle was built and the framework for configuration fo
 and the vehicle was then coded so that its wheels turn whenever the user turn his iPhone using Accelerometer.
 Lessons Learnt - Building a car using the primitives that comes with SceneKit. Using the CMAcceleration to find out which direction
 the iPhone is at and using that to create Physicsbody() addbehavour so the user can move the front wheels to steer the vehicle.
-Second Commit - Using the renderer didDetectPhysics() method for adding behavour to the vehicle and orientation. 
+Second Commit - Using the renderer didSimulatePhysicsAtTime() method for adding behavour to the vehicle and orientation. Also fixing
+bugs that seem to have crept into ARKit.
