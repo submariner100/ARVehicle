@@ -8,3 +8,8 @@ Lessons Learnt - Building a car using the primitives that comes with SceneKit. U
 the iPhone is at and using that to create Physicsbody() addbehavour so the user can move the front wheels to steer the vehicle.
 Second Commit - Using the renderer didSimulatePhysicsAtTime() method for adding behavour to the vehicle and orientation. Also fixing
 bugs that seem to have crept into ARKit.
+
+Last commit - I have added more touches to the app. 1 finger on screen moves the vehicle forwards, 2 fingers on screen moves vehicle
+backwards and 3 fingers stops the vehicle.
+
+This was quite a good project to help understand ARKit.
