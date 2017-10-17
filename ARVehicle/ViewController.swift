@@ -24,6 +24,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 	let motionManager = CMMotionManager()
 	var vehicle = SCNPhysicsVehicle()
 	var orientation: CGFloat = 0
+	var touched: Bool = false
 	
 	
 	
@@ -38,6 +39,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 		self.setUpAccelerometer()
 		self.sceneView.showsStatistics = true
 		
+	}
+	
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		self.touched = true
+	}
+	
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		self.touched = false
 	}
 	
 	func createConcrete(planeAnchor: ARPlaneAnchor) -> SCNNode {
@@ -98,6 +107,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 		
 		chassis.position = currentPositionOfCamera
 		let body = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(node: chassis, options: [SCNPhysicsShape.Option.keepAsCompound: true]))
+		body.mass = 1
 		chassis.physicsBody = body
 		self.vehicle = SCNPhysicsVehicle(chassisBody: chassis.physicsBody!, wheels: [v_rearRightWheel, v_rearLeftWheel, v_frontRightWheel, v_frontLeftWheel])
 		self.sceneView.scene.physicsWorld.addBehavior(self.vehicle)
@@ -107,8 +117,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 	
 	func renderer(_ renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval) {
 		//print("simulating physics")
-		self.vehicle.setSteeringAngle(orientation, forWheelAt: 2)
-		self.vehicle.setSteeringAngle(orientation, forWheelAt: 3)
+		var engineForce: CGFloat = 0
+		self.vehicle.setSteeringAngle(-orientation, forWheelAt: 2)
+		self.vehicle.setSteeringAngle(-orientation, forWheelAt: 3)
+		if self.touched ==  true {
+			engineForce = 5
+		} else {
+			engineForce = 0
+		}
+		self.vehicle.applyEngineForce(engineForce, forWheelAt: 0)
+		self.vehicle.applyEngineForce(engineForce, forWheelAt: 1)
+		
+		
+		
+		
 		
 	}
 	
