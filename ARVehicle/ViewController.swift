@@ -6,6 +6,11 @@
 //  Copyright © 2017 Lodge Farm Apps. All rights reserved.
 //
 
+// 15/10/2017 - notes The wheels have disappeared from the sceneView so
+// we need to recap the section on physics.
+
+
+
 import UIKit
 import ARKit
 import CoreMotion
@@ -14,9 +19,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
 	
 	@IBOutlet weak var sceneView: ARSCNView!
+	
 	let configuration = ARWorldTrackingConfiguration()
 	let motionManager = CMMotionManager()
 	var vehicle = SCNPhysicsVehicle()
+	var orientation: CGFloat = 0
+	
+	
+	
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.sceneView.autoenablesDefaultLighting = true
@@ -25,6 +36,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 		self.sceneView.session.run(configuration)
 		self.sceneView.delegate = self
 		self.setUpAccelerometer()
+		self.sceneView.showsStatistics = true
 		
 	}
 	
@@ -92,6 +104,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 		self.sceneView.scene.rootNode.addChildNode(chassis)
 		}
 	
+	
+	func renderer(_ renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval) {
+		//print("simulating physics")
+		self.vehicle.setSteeringAngle(orientation, forWheelAt: 2)
+		self.vehicle.setSteeringAngle(orientation, forWheelAt: 3)
+		
+	}
+	
 	func setUpAccelerometer() {
 		if motionManager.isAccelerometerAvailable {
 			motionManager.accelerometerUpdateInterval = 1/60
@@ -111,9 +131,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 	
 	func accelerometerDidChange(acceleration: CMAcceleration) {
 		
-		print(acceleration.x)
-		print(acceleration.y)
-		print("")
+		if acceleration.x > 0 {
+			self.orientation = -CGFloat(acceleration.y)
+			
+		} else {
+			
+			self.orientation = CGFloat(acceleration.y)
+		}
 	}
 }
 
